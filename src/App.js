@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 
+import Comments from './Comments'
+
+import NewComment from './NewComment'
+
 class App extends Component {
   
   state = {
-    newComment : '',
     comments : [
       'Comment 1',
       'Comment 2',
@@ -11,36 +14,23 @@ class App extends Component {
     ]
   }
 
-  sendComment =() =>{
+  sendComment = comment =>{
     this.setState({
-      comments: [...this.state.comments, this.state.newComment],
-      newComment: ''
+      comments: [...this.state.comments, comment]
     })
   }
 
-  handleChange = event =>{
-    this.setState({
-      newComment: event.target.value
-    })
-  }
+
 
   render(){
   return (
     <div>
       { /* NOVO COMENTARIO */ }
-      <div>
-        <textarea value={this.state.newComment} onChange={this.handleChange}></textarea>
-        <button onClick={this.sendComment}>Enviar</button>
-        { /*this.state.newComment */}
-      </div>
+      
+      <NewComment sendComment={this.sendComment}/>
 
       { /* COMENTARIOS */ } 
-      <div>
-        { this.state.comments.map( c => {
-          return <div>{c}</div>
-        } )}
-      
-      </div>
+     <Comments comments={this.state.comments}/>
 
     </div>
     
