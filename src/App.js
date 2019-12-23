@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class App extends Component {
   
   state = {
+    newComment : '',
     comments : [
       'Comment 1',
       'Comment 2',
@@ -12,7 +13,14 @@ class App extends Component {
 
   sendComment =() =>{
     this.setState({
-      comments: [...this.state.comments, 'Comentário novo']
+      comments: [...this.state.comments, this.state.newComment],
+      newComment: ''
+    })
+  }
+
+  handleChange = event =>{
+    this.setState({
+      newComment: event.target.value
     })
   }
 
@@ -21,8 +29,9 @@ class App extends Component {
     <div>
       { /* NOVO COMENTARIO */ }
       <div>
-        <textarea></textarea>
+        <textarea value={this.state.newComment} onChange={this.handleChange}></textarea>
         <button onClick={this.sendComment}>Enviar</button>
+        { /*this.state.newComment */}
       </div>
 
       { /* COMENTARIOS */ } 
