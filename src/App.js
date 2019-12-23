@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
 
 import Comments from './Comments'
-
 import NewComment from './NewComment'
+
+import {database} from './firebase' 
 
 class App extends Component {
   
   state = {
-    comments : [
-      'Comment 1',
-      'Comment 2',
-      'Comment 3'
-    ]
+    comments :{},
+    isLoading : false
   }
 
   sendComment = comment =>{
-    this.setState({
-      comments: [...this.state.comments, comment]
-    })
+
+    const  id = database.ref().child('comments').push().key
+
+    const comments = {}
+
+    comments['comments/'+id] = {
+      comment
+    }
+    database.ref().update(comments)
   }
 
+  componentDidMount(){
+    this.setState({ isLoading : true})
+    this.comments = database.ref('comments')
+    this.comments.on('value', snapshot =>{
+      this.setState({
+         comments : snapshot.val(),
+        isLoading: false
+        })
+    })
+  }
 
 
   render(){
@@ -31,6 +45,10 @@ class App extends Component {
 
       { /* COMENTARIOS */ } 
      <Comments comments={this.state.comments}/>
+
+    {
+      this.state.isLoading && <p>Carregando...</p> 
+    }
 
     </div>
     
