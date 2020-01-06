@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Comments from './Comments'
 import NewComment from './NewComment'
 import Login from './Login'
-
+import User from './User'
 
 class App extends Component {
 
@@ -12,7 +12,8 @@ class App extends Component {
     isLoading: false,
     isAuth: false,
     isAuthError : false,
-    authError: ''
+    authError: '',
+    user: {}
   }
 
   sendComment = comment => {
@@ -22,7 +23,9 @@ class App extends Component {
     const comments = {}
 
     comments['comments/' + id] = {
-      comment
+      comment,
+      email: this.state.user.email,
+      userid: this.state.user.uid
     }
     database.ref().update(comments)
   }
@@ -62,20 +65,31 @@ class App extends Component {
           isAuth: true,
           user
         })
+      }else{
+        this.setState({
+          isAuth: false,
+          user: {}
+        })
       }
     })
   }
 
+  logout = () =>{
+    const { auth} = this.props
+
+    auth.signOut()
+  }
 
   render() {
     return (
       <div>
 
+      {this.state.isAuth && <User email={this.state.user.email} logout={this.logout}/>}
+
       { !this.state.isAuth && <Login login={this.login}/>}
 
-        { /* NOVO COMENTARIO SOMENTE SE ESTIVER LOGADO*/}
-        {this.state.isAuth && <NewComment sendComment={this.sendComment} />
-        }
+      { /* NOVO COMENTARIO SOMENTE SE ESTIVER LOGADO*/}
+      {this.state.isAuth && <NewComment sendComment={this.sendComment} /> }
         { /* COMENTARIOS */}
         <Comments comments={this.state.comments} />
 
