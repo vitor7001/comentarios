@@ -35,6 +35,7 @@ class Login extends Component{
             {
                 this.props.isAuthError && <p> <b>Erro: </b>{errorMessages[this.props.authError]}</p>
             }
+            <button onClick={() => this.props.changeScreen('signup')}>Criar Conta</button>
         </div>
     )}
 }

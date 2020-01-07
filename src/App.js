@@ -4,6 +4,7 @@ import Comments from './Comments'
 import NewComment from './NewComment'
 import Login from './Login'
 import User from './User'
+import SignUp from './SignUp'
 
 class App extends Component {
 
@@ -13,7 +14,10 @@ class App extends Component {
     isAuth: false,
     isAuthError : false,
     authError: '',
-    user: {}
+    isSignUpError: false,
+    signUpError: '',
+    user: {},
+    userScreen: 'login' //signup
   }
 
   sendComment = comment => {
@@ -48,6 +52,26 @@ class App extends Component {
       })
     }
   }
+
+  createAccount = async(email, passwd) =>{
+    const { auth } = this.props
+    this.setState({
+      signUpError : '',
+      isSignUpError: false
+    })
+    try{
+
+      await auth.createUserWithEmailAndPassword(email, passwd)
+      
+    }catch(error){
+      console.log(error.code)
+      this.setState({
+        signUpError :error.code,
+        isSignUpError: true
+      })
+    }
+  }
+
   componentDidMount() {
     const { database, auth } = this.props
     this.setState({ isLoading: true })
@@ -80,14 +104,28 @@ class App extends Component {
     auth.signOut()
   }
 
+  changeScreen = (screen) =>{
+    this.setState({
+      userScreen: screen
+    })
+  }
   render() {
     return (
       <div>
 
       {this.state.isAuth && <User email={this.state.user.email} logout={this.logout}/>}
 
-      { !this.state.isAuth && <Login login={this.login}
-       isAuthError={this.state.isAuthError} authError={this.state.authError}/>}
+      { !this.state.isAuth 
+        && this.state.userScreen === 'login' &&
+      <Login login={this.login}
+       isAuthError={this.state.isAuthError} authError={this.state.authError} changeScreen={this.changeScreen}/>
+      }
+
+      { !this.state.isAuth 
+        && this.state.userScreen === 'signup' &&
+      <SignUp createAccount={this.createAccount}
+       isSignUpError={this.state.isSignUpError} signUpError={this.state.signUpError}  changeScreen={this.changeScreen}/>
+      }
 
       { /* NOVO COMENTARIO SOMENTE SE ESTIVER LOGADO*/}
       {this.state.isAuth && <NewComment sendComment={this.sendComment} /> }
