@@ -86,7 +86,8 @@ class App extends Component {
 
       {this.state.isAuth && <User email={this.state.user.email} logout={this.logout}/>}
 
-      { !this.state.isAuth && <Login login={this.login}/>}
+      { !this.state.isAuth && <Login login={this.login}
+       isAuthError={this.state.isAuthError} authError={this.state.authError}/>}
 
       { /* NOVO COMENTARIO SOMENTE SE ESTIVER LOGADO*/}
       {this.state.isAuth && <NewComment sendComment={this.sendComment} /> }
