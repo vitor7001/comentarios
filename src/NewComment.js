@@ -21,11 +21,14 @@ class NewComment extends Component {
 
     render() {
         return (
-            <div>
-                <textarea value={this.state.newComment} onChange={this.handleChange}></textarea>
-                <button onClick={this.sendComment}>Enviar</button>
+        <div>
+            <h3>Deixe seu comentário abaixo:</h3> <br />
+            <form className='form-inline'>
+                <textarea rows="5" cols="55" value={this.state.newComment} onChange={this.handleChange}></textarea>
+                <button className='btn btn-primary ml-1' onClick={this.sendComment}>Enviar</button>
                 { /*this.state.newComment */}
-            </div>
+            </form>
+        </div>
         )
     }
 }
